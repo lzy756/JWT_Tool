@@ -1,5 +1,11 @@
 package JWT;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.Gson;
+
+import java.util.Map;
+
 public class Main {
     public static void main(String[] args) throws Exception {
         // 示例：生成和解码JWT
@@ -27,9 +33,15 @@ public class Main {
             System.out.println("Decoded Payload: " + decoded[1]);
 
             System.out.println("Is JWT valid? " + jwt_decoder.verify(jwt_sess, secret));
+            Map<String, Object> map=new Gson().fromJson(decoded[1], Map.class);
+            map.put("sub","admin");
+            System.out.println(map);
+            String new_payload = new Gson().toJson(map);
 
-            String calc_jwt=jwt_encoder.encode(decoded[0], decoded[1], secret);
-            System.out.println("is calc jwt equal to jwt_sess? " + calc_jwt.equals(jwt_sess));
+            String new_jwt = jwt_encoder.encode(decoded[0], new_payload, secret);
+            System.out.println("New JWT: " + new_jwt);
+//            String calc_jwt=jwt_encoder.encode(decoded[0], decoded[1], secret);
+//            System.out.println("is calc jwt equal to jwt_sess? " + calc_jwt.equals(jwt_sess));
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -84,20 +84,5 @@ public class jwt_encoder {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         return keyFactory.generatePrivate(privateKeySpec);
     }
-    
-    // 使用公钥作为密钥的HS256签名（专门用于算法混淆攻击）
-    public static String signHS256WithPublicKey(String data, String publicKeyStr) throws Exception {
-        // 处理公钥格式 (移除PEM头尾和换行符)
-        publicKeyStr = publicKeyStr.replaceAll("-----BEGIN PUBLIC KEY-----", "")
-                                 .replaceAll("-----END PUBLIC KEY-----", "")
-                                 .replaceAll("\\s", "");
-        
-        // 使用公钥原始字节作为HMAC密钥
-        byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyStr);
-        Mac hmac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec keySpec = new SecretKeySpec(publicKeyBytes, "HmacSHA256");
-        hmac.init(keySpec);
-        byte[] sig = hmac.doFinal(data.getBytes("UTF-8"));
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(sig);
-    }
+
 }

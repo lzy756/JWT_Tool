@@ -68,9 +68,9 @@ public class jwt_encoder {
         ASN1Sequence seq = (ASN1Sequence) asn1InputStream.readObject();
         asn1InputStream.close();
         
-        // PKCS#1 RSA 私钥包含 9 个整数
-        // 第一个是版本，第二个是模数 n，第三个是公开指数 e，第四个是私有指数 d
-        if (seq.size() != 9) {
+        // PKCS#1 RSA 私钥包含至少 9 个字段，最后的 OtherPrimeInfos 可选
+        // 部分实现中可能省略该可选字段，因此这里只检查字段数不小于 9
+        if (seq.size() < 9) {
             throw new IllegalArgumentException("Invalid RSA private key encoding");
         }
         
